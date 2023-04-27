@@ -167,8 +167,8 @@ int insertNode(headNode* h, int key) {
 			return 0;
 		}
 
-		trail = n;  //앞 노드를 이전 노드로 한다
-		n = n->link; 
+		trail = n;  //이전 노드를 이 노드로 하고
+		n = n->link; //다음 노드로 이동
 	}
 
 	/* 마지막 노드까지 찾지 못한 경우 , 마지막에 삽입 */
@@ -181,21 +181,22 @@ int insertNode(headNode* h, int key) {
  */
 int insertLast(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode));  //노드 선언 및 동적 메모리 할당
 	node->key = key;
 	node->link = NULL;
 
-	if (h->first == NULL)
+	if (h->first == NULL)  //노드에 아무것도 없었다면 첫번째 노드로
 	{
 		h->first = node;
 		return 0;
 	}
 
-	listNode* n = h->first;
-	while(n->link != NULL) {
-		n = n->link;
+	listNode* n = h->first;  //첫번째 노드부터
+
+	while(n->link != NULL) {  //노드의 link가 가리키는 것이 없어질 때까지 (마지막 노드까지)
+		n = n->link;  //다음 노드로 이동
 	}
-	n->link = node;
+	n->link = node;  //마지막 노드가 되면 그 노드의 link가 삽입할 노드를 가리키게 설정
 	return 0;
 }
 
@@ -204,11 +205,11 @@ int insertLast(headNode* h, int key) {
  */
 int insertFirst(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode));  //노드 선언 및 동적 메모리 할당
 	node->key = key;
 
-	node->link = h->first;
-	h->first = node;
+	node->link = h->first;  //노드의 link를 첫번째 노드로 설정
+	h->first = node;  //첫번째 노드를 삽입할 노드로 설정
 
 	return 0;
 }
@@ -218,7 +219,7 @@ int insertFirst(headNode* h, int key) {
  */
 int deleteNode(headNode* h, int key) {
 
-	if (h->first == NULL)
+	if (h->first == NULL)  //만약 노드가 없다면 오류 메시지와 함께 함수 종료
 	{
 		printf("nothing to delete.\n");
 		return 0;
@@ -229,19 +230,19 @@ int deleteNode(headNode* h, int key) {
 
 	/* key를 기준으로 삽입할 위치를 찾는다 */
 	while(n != NULL) {
-		if(n->key == key) {
+		if(n->key == key) {  //노드의 key가 지우려는 key와 같을 경우
 			/* 첫 노드 앞쪽에 삽입해야할 경우 인지 검사 */
-			if(n == h->first) {
-				h->first = n->link;
+			if(n == h->first) {  //만약 이 노드가 첫번째 노드였다면
+				h->first = n->link;  //이 노드가 가리키던 다음 노드를 첫번째 노드로 설정
 			} else { /* 중간인 경우거나 마지막인 경우 */
-				trail->link = n->link;
+				trail->link = n->link;  //이전 노드의 링크를 이 노드가 가리키던 다음 노드로 설정
 			}
-			free(n);
+			free(n);  //이 노드에 할당되었던 메모리 반환
 			return 0;
 		}
 
-		trail = n;
-		n = n->link;
+		trail = n;  //이전 노드를 이 노드로
+		n = n->link;  //다음 노드로 이동
 	}
 
 	/* 찾지 못 한경우 */
@@ -255,7 +256,7 @@ int deleteNode(headNode* h, int key) {
  */
 int deleteLast(headNode* h) {
 
-	if (h->first == NULL)
+	if (h->first == NULL)  //노드가 아무것도 없으면 오류메시지와 함께 함수 종료
 	{
 		printf("nothing to delete.\n");
 		return 0;
@@ -265,21 +266,21 @@ int deleteLast(headNode* h) {
 	listNode* trail = NULL;
 
 	/* 노드가 하나만 있는 경우, 즉 first node == last node인  경우 처리 */
-	if(n->link == NULL) {
-		h->first = NULL;
-		free(n);
+	if(n->link == NULL) {  //이 노드가 가리키는 다음 노드가 없을 경우
+		h->first = NULL;  //첫번째 노드가 없다고 설정한 후
+		free(n);  //이 노드 메모리 반환
 		return 0;
 	}
 
 	/* 마지막 노드까지 이동 */
-	while(n->link != NULL) {
-		trail = n;
-		n = n->link;
+	while(n->link != NULL) {  //노드의 link가 가리키는 곳이 없을 때까지
+		trail = n;  //이전 노드를 이 노드로 하고
+		n = n->link;  //다음 노드로 이동
 	}
 
 	/* n이 삭제되므로, 이전 노드의 링크 NULL 처리 */
-	trail->link = NULL;
-	free(n);
+	trail->link = NULL;  //이전 노드의 link가 가리키는 것이 없게 설정한 후
+	free(n);  //이 노드의 메모리 반환
 
 	return 0;
 }
@@ -288,15 +289,15 @@ int deleteLast(headNode* h) {
  */
 int deleteFirst(headNode* h) {
 
-	if (h->first == NULL)
+	if (h->first == NULL)  //노드가 아무것도 없었으면 오류 메시지와 함께 함수 종료
 	{
 		printf("nothing to delete.\n");
 		return 0;
 	}
 	listNode* n = h->first;
 
-	h->first = n->link;
-	free(n);
+	h->first = n->link;  //첫번째 노드를 이 노드가 가리키던 다음 노드로 설정
+	free(n);  //이 노드 메모리 반환
 
 	return 0;
 }
@@ -308,22 +309,22 @@ int deleteFirst(headNode* h) {
 int invertList(headNode* h) {
 
 
-	if(h->first == NULL) {
+	if(h->first == NULL) {  //노드가 아무것도 없을 시, 오류 메시지와 함께 함수 종료
 		printf("nothing to invert...\n");
 		return 0;
 	}
 	listNode *n = h->first;
-	listNode *trail = NULL;
-	listNode *middle = NULL;
+	listNode *trail = NULL;  //이전 노드
+	listNode *middle = NULL;  //중간 노드
 
-	while(n != NULL){
-		trail = middle;
+	while(n != NULL){  //노드가 없어지기 전까지
+		trail = middle;  //이전 노드를 중간 노드로, 중간 노드를 이 노드로 설정하고
 		middle = n;
-		n = n->link;
-		middle->link = trail;
+		n = n->link;  //다음 노드로 이동
+		middle->link = trail;  //중간 노드의 link를 이전 노드가 가리키게 설정
 	}
 
-	h->first = middle;
+	h->first = middle;  //중간 노드를 첫번째 노드로 하게끔
 
 	return 0;
 }
